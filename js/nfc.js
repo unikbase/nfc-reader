@@ -1,8 +1,22 @@
 function log(message) {
     document.getElementById("log").innerHTML += message +"<br/>";
 }
-  
-async function nfc(){
+ 
+
+const nfcPermissionStatus = await navigator.permissions.query({ name: "nfc" });
+if (nfcPermissionStatus.state === "granted") {
+  // NFC access was previously granted, so we can start NFC scanning now.
+  startScanning();
+} else {
+  // Show a "scan" button.
+  document.querySelector("#scanButton").style.display = "block";
+  document.querySelector("#scanButton").onclick = event => {
+    // Prompt user to allow UA to send and receive info when they tap NFC devices.
+    startScanning();
+  };
+}
+
+async function startScanning(){
     if ('NDEFReader' in window) {
     log("Web NFC is supported");
     const ndefReader = new NDEFReader();
@@ -25,5 +39,3 @@ async function nfc(){
     log("Web NFC is not supported");
   }
 }
-
-nfc();
