@@ -2,7 +2,23 @@ function log(message) {
     document.getElementById("log").innerHTML += message +"<br/>";
 }
 
+async function requestNFCPermission() {
+    try {
+      const status = await navigator.permissions.request({ name: "nfc" });
+      if (status.state === "granted") {
+        // Permission granted, start scanning
+      } else {
+        // Permission denied
+        log("NFC permission request denied");
+      }
+    } catch (error) {
+      log(`Error requesting NFC permission: ${error}`);
+    }
+  }
+  
+  
 async function nfc(){
+    await   requestNFCPermission();
     if ('NDEFReader' in window) {
     log("Web NFC is supported");
     const ndefReader = new NDEFReader();
